@@ -1,0 +1,7 @@
+bertopic==0.16.4
+distlib==0.3.9
+tqdm==4.66.6
+torch==2.5.1
+torchvision==0.20.1
+scikit-learn==1.5.2
+matplotlib==3.9.2
