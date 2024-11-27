@@ -68,10 +68,10 @@ The updated FakeNewsClassifier architecture in Model 2 processed both BERT embed
 ### 5. Evaluation Metrics
 
 ### 6. Analysis Plots
-**Model 1:**
+**Model 1:**  
 ![main_confusion_matrix](notebooks/main_confusion_matrix_white_background.png)
 
-**Model 2:**
+**Model 2:**  
 ![test_confusion_matrix](notebooks/test_confusion_matrix_white_background.png)
 
 ### 7. Conclusion
