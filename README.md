@@ -46,13 +46,13 @@ The columns of the dataset are as follows:
 | `justification`        | Explanation or reasoning provided for the truthfulness evaluation.              |
 
 The underlying distribution of labels from the three datasets are as follows:
-Training Dataset:
+Training Dataset:  
 ![training_dist](results/label_distribution_train.png)
 
-Testing Dataset:
+Testing Dataset:  
 ![testing_dist](results/label_distribution/test.png)
 
-Validation Dataset:
+Validation Dataset:  
 ![validation_dist](results/label_distribution_validation.png)
 
 ### 3. Model 1
