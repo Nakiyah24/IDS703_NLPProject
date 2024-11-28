@@ -8,11 +8,14 @@
 2. Data Overview
 3. Data Preprocessing
 4. Model / Implementation
-5. Evaluation Metrics
-6. Analysis Plots
-7. Conclusion
+5. Analysis Plots
+6. Conclusion
 
 ### 1. Introduction
+This project focuses on classifying American political statements based on their truthfulness to combat misinformation, especially in the context of social media. The classification task categorizes statements as true, mostly true, half true, mostly false, false, or blatantly false (“pants on fire”). This is essential for fact-checking efforts and addressing the challenges misinformation poses to society.
+
+Two machine learning approaches are explored in the project: a feedforward neural network (Model 1) and a BERT-enhanced classifier (Model 2). The document covers the architecture, preprocessing, and training methodologies of each model, along with performance evaluations. It also highlights challenges such as feature redundancy, overfitting, and class imbalance, comparing the effectiveness of traditional models versus more advanced, context-aware methods.
+
 
 ### 2. Data Overview
 We made use of the [LIAR 2 dataset](https://paperswithcode.com/dataset/liar2), curated from PolitiFact, which is an extension of the original LIAR dataset and contains over 12,000 short statements that are labeled across six levels of truthfulness: true, mostly true, half true, mostly false, false, and pants on fire (indicating a blatantly false statement). The dataset also provides rich metadata for each statement, including details such as the speaker, the context of the statement, and the subject matter, making it highly suitable for short-text classification tasks.
@@ -55,32 +58,31 @@ Testing Dataset:
 Validation Dataset:  
 ![validation_dist](results/label_distribution_validation.png)
 
+
 ### 3. Model 1
-**FakeNewsClassifier**
-To classify textual data, we designed a feedforward neural network, FakeNewsClassifier, optimized for multi-class classification tasks with high-dimensional vectorized features. The model preprocesses textual data by converting it into numerical representations using custom word2vec encoding. Missing values are replaced with the string “None”, and each column is vectorized differently. Text columns like “statement”, “justification”, and “speaker description” are tokenized and added to the vocabulary, while the “subject” column is processed based on semicolon delimiters to handle multiple subjects. For categorical columns like “state information”, “speaker”, and “context”, one-hot encoding is applied. Out-of-vocabulary tokens are mapped to a special  token.
+**Custom Built Feed Forward Neural Network**
+To classify textual data, we designed a feedforward neural network, optimized for multi-class classification tasks with high-dimensional vectorized features. The model preprocesses textual data by converting it into numerical representations using custom word2vec encoding. Missing values are replaced with the string `“None”`, and each column is vectorized differently. Text columns like `“statement”`, `“justification”`, and `“speaker description”` are tokenized and added to the vocabulary, while the `“subject”` column is processed based on semicolon delimiters to handle multiple subjects. For categorical columns like `“state information”`, `“speaker”`, and `“context”`, one-hot encoding is applied. Out-of-vocabulary tokens are mapped to a special token.
 
 A custom SentimentDataset class was created to integrate the preprocessed data with PyTorch. This class processes the data, combines the features into a vector, and returns tensors for labels and training features. PyTorch’s DataLoader is used for batch processing, shuffling, and parallel data loading, which ensures efficiency during training and testing phases.
 
-The FakeNewsClassifier is structured with an input layer accepting feature vectors of size 74,529. This is followed by two hidden layers with 500 and 20 neurons, respectively, each utilizing Batch Normalization and ReLU activation for stable and accelerated training. The output layer has six neurons, representing the six truthfulness categories, with a Softmax activation to produce class probabilities. The model is trained using Cross-Entropy Loss and the Adam optimizer, with a learning rate of 0.001 and weight decay of 1e-3 to reduce overfitting.
+The neural network is structured with an input layer accepting feature vectors of size 85,446. This is followed by two hidden layers with 500 and 20 neurons, respectively, each utilizing Batch Normalization and ReLU activation for stable and accelerated training. The output layer has six neurons, representing the six truthfulness categories, with a Softmax activation to produce class probabilities. The model is trained using Cross-Entropy Loss and the Adam optimizer, with a learning rate of 0.001 and weight decay of 1e-3 to reduce overfitting.
 
 The model was trained for 10 epochs using a batch size of 128 on a GPU, improving memory efficiency and ensuring stable training through batch processing. The Adam optimizer adapts the learning rate for each parameter, aiding in convergence while preventing overfitting.
 
+
 ### 4. Model 2
 **Enhanced Classification with BERT and Refined Architecture**
+In Model 2, we addressed the high dimensionality of input features from Model 1 by incorporating BERT for textual columns such as `“statement”`, `“justification”`, and `“speaker description”`. BERT’s tokenizer transformed these columns into 256-dimensional context-aware embeddings, reducing the vector size significantly compared to the one-hot encoding approach used in Model 1. For categorical columns, we used specialized vocabularies and vectorization, while maintaining one-hot encoding for columns like `“speaker”` and `“context”`.
 
-In our second model, we integrated BERT embeddings for improved feature extraction, particularly for textual columns like “statement,” “justification,” and “speaker description.” BERT’s tokenizer was used to convert these columns into context-aware embeddings, capturing the relationships between words within a maximum sequence length of 256 tokens. This approach replaced the one-hot encoding used in Model 1, which treated words independently. For categorical columns such as “subject” and “state_info,” specialized vocabularies were used, and columns like “speaker” and “context” were processed with one-hot encoding. Sparse PCA was again applied to reduce dimensionality, optimizing the retained components to reduce computational overhead and prevent overfitting.
+The custom SentimentDataset class was enhanced for dynamic BERT tokenization, seamlessly integrating with PyTorch for efficient data handling. The updated FakeNewsClassifier combines BERT embeddings with vectorized outputs and processes them through four fully connected hidden layers, reducing dimensionality from 512 to 64 neurons, followed by a final output layer with six neurons and a Softmax activation. The model’s hyperparameters, including loss function, learning rate, batch size, and optimizer, were carefully selected to optimize performance.
 
-The SentimentDataset class was enhanced to handle BERT tokenization and preprocessing, ensuring smooth integration with PyTorch. We used DataLoader for efficient batch processing, shuffling, and parallel data loading during training, validation, and testing.
 
-The updated FakeNewsClassifier architecture in Model 2 processed both BERT embeddings and vectorized features through four hidden layers. The first hidden layer contained 512 neurons, followed by 256, 128, and 64 neurons in subsequent layers, with Batch Normalization and ReLU activations. The output layer had six neurons for the truthfulness categories, using Softmax for class probabilities.
-
-### 5. Evaluation Metrics
-
-### 6. Analysis Plots
+### 5. Analysis Plots
 **Model 1:**  
 ![main_confusion_matrix](results/main_confusion_matrix.png)
 
 **Model 2:**  
 ![test_confusion_matrix](results/test_confusion_matrix.png)
 
-### 7. Conclusion
+### 6. Conclusion
+While Model 2 integrated BERT embeddings for better context understanding, it faced challenges such as overfitting, difficulty in combining embeddings with other features, and misclassifications between adjacent classes. These issues hindered its performance compared to Model 1, which, despite its simpler architecture, showed better generalization and balanced results across categories. This suggests that simpler models and feature sets may be more effective for this task. To improve Model 2, future work will focus on addressing overfitting, fine-tuning the BERT embeddings, and managing class imbalances.
