@@ -45,16 +45,25 @@ The columns of the dataset are as follows:
 | `context`              | Additional context or setting where the statement was made.                     |
 | `justification`        | Explanation or reasoning provided for the truthfulness evaluation.              |
 
+The underlying distribution of labels from the three datasets are as follows:
+Training Dataset:
+![training_dist](results/label_distribution_train.png)
+
+Testing Dataset:
+![testing_dist](results/label_distribution/test.png)
+
+Validation Dataset:
+![validation_dist](results/label_distribution_validation.png)
 
 ### 3. Model 1
 **FakeNewsClassifier**
-FakeNewsClassifier is a feedforward neural network designed for multi-class classification of textual data, specifically tailored to classify statements into categories such as “True,” “False,” “Mostly True,” etc. The model efficiently handles high-dimensional vectorized features, making it suitable for large-scale classification tasks.
+To classify textual data, we designed a feedforward neural network, FakeNewsClassifier, optimized for multi-class classification tasks with high-dimensional vectorized features. The model preprocesses textual data by converting it into numerical representations using custom word2vec encoding. Missing values are replaced with the string “None”, and each column is vectorized differently. Text columns like “statement”, “justification”, and “speaker description” are tokenized and added to the vocabulary, while the “subject” column is processed based on semicolon delimiters to handle multiple subjects. For categorical columns like “state information”, “speaker”, and “context”, one-hot encoding is applied. Out-of-vocabulary tokens are mapped to a special  token.
 
-For data preprocessing, the model converts textual data into numerical features using one-hot encoding and tokenization. Columns like statement, justification, and speaker_description undergo tokenization, where words are split and punctuation is removed. For other columns like subject and state_info, text is parsed based on semicolon delimiters. To handle out-of-vocabulary words, an `<UNK>` token is introduced. The high-dimensional vectorized data is then reduced using Sparse PCA, which reduces the dimensionality to 500 components, making the model computationally efficient and less prone to overfitting.
+A custom SentimentDataset class was created to integrate the preprocessed data with PyTorch. This class processes the data, combines the features into a vector, and returns tensors for labels and training features. PyTorch’s DataLoader is used for batch processing, shuffling, and parallel data loading, which ensures efficiency during training and testing phases.
 
-The core architecture of the model consists of an input layer that accepts feature vectors of size 74,529. This is followed by two hidden layers with 500 and 20 neurons, each utilizing Batch Normalization and ReLU activation functions. The output layer contains six neurons corresponding to the six target classes, with a Softmax activation function for multi-class classification. The model is trained using Cross-Entropy Loss, which is well-suited for categorical tasks, and the Adam optimizer with a learning rate of 0.001 and weight decay of 1e-3 to prevent overfitting.
+The FakeNewsClassifier is structured with an input layer accepting feature vectors of size 74,529. This is followed by two hidden layers with 500 and 20 neurons, respectively, each utilizing Batch Normalization and ReLU activation for stable and accelerated training. The output layer has six neurons, representing the six truthfulness categories, with a Softmax activation to produce class probabilities. The model is trained using Cross-Entropy Loss and the Adam optimizer, with a learning rate of 0.001 and weight decay of 1e-3 to reduce overfitting.
 
-Training occurs over 10 epochs with a batch size of 128, and the model leverages a GPU for accelerated computations. During training, a custom SentimentDataset class organizes the preprocessed data into tensors, and PyTorch’s DataLoader is used for efficient batch processing, shuffling, and parallel loading during training, validation, and testing phases. This setup ensures that the model can handle large datasets efficiently while avoiding overfitting through randomized data shuffling.
+The model was trained for 10 epochs using a batch size of 128 on a GPU, improving memory efficiency and ensuring stable training through batch processing. The Adam optimizer adapts the learning rate for each parameter, aiding in convergence while preventing overfitting.
 
 ### 4. Model 2
 **Enhanced Classification with BERT and Refined Architecture**
@@ -69,9 +78,9 @@ The updated FakeNewsClassifier architecture in Model 2 processed both BERT embed
 
 ### 6. Analysis Plots
 **Model 1:**  
-![main_confusion_matrix](notebooks/main_confusion_matrix_white_background.png)
+![main_confusion_matrix](results/main_confusion_matrix.png)
 
 **Model 2:**  
-![test_confusion_matrix](notebooks/test_confusion_matrix_white_background.png)
+![test_confusion_matrix](results/test_confusion_matrix.png)
 
 ### 7. Conclusion
