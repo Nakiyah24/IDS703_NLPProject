@@ -1,4 +1,4 @@
-# ECE 684 / 1DS 703 Natural Language Processing Final Project 
+# ECE 684 / IDS 703 Natural Language Processing Final Project 
 
 ## NaN-Tastic Fact Checkers: Uncovering Truth in Headlines with Advanced Classification Techniques
 ### By: Ashley Hong, Nakiyah Dhariwala, Nruta Choudhari
