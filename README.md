@@ -50,7 +50,7 @@ Training Dataset:
 ![training_dist](results/label_distribution_train.png)
 
 Testing Dataset:  
-![testing_dist](results/label_distribution/test.png)
+![testing_dist](results/label_distribution_test.png)
 
 Validation Dataset:  
 ![validation_dist](results/label_distribution_validation.png)
