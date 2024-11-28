@@ -79,10 +79,10 @@ The custom SentimentDataset class was enhanced for dynamic BERT tokenization, se
 
 ### 5. Analysis Plots
 **Model 1:**  
-![main_confusion_matrix](results/main_confusion_matrix.png)
+![model1_confusion_matrix](results/model1_confusion_matrix.png)
 
 **Model 2:**  
-![test_confusion_matrix](results/test_confusion_matrix.png)
+![model2_confusion_matrix](results/model2_confusion_matrix.png)
 
 ### 6. Conclusion
 While Model 2 integrated BERT embeddings for better context understanding, it faced challenges such as overfitting, difficulty in combining embeddings with other features, and misclassifications between adjacent classes. These issues hindered its performance compared to Model 1, which, despite its simpler architecture, showed better generalization and balanced results across categories. This suggests that simpler models and feature sets may be more effective for this task. To improve Model 2, future work will focus on addressing overfitting, fine-tuning the BERT embeddings, and managing class imbalances.
